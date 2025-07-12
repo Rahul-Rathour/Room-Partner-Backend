@@ -5,13 +5,20 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-app.use(express.json());
+
 // app.use(cors());
+// ✅ CORS FIRST
 app.use(cors({
-  origin: "https://room-partner-frontend.vercel.app",  // Allow frontend domain
-  methods: ["GET", "POST", "PUT", "DELETE"],            // Add any methods you use
-  credentials: true                                      // If you use cookies/auth
+  origin: "https://room-partner-frontend.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
 }));
+
+// ✅ Handle preflight requests
+app.options("*", cors());
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
