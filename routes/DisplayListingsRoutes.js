@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).json(roomPartnerData);
   } catch (error) {
-    console.error("Error fetching room listings:", error.message);  // ✅ Fixed here
+    console.error("Error fetching room listings:", error.message);
     res.status(500).send("Server Error...");
   }
 });
