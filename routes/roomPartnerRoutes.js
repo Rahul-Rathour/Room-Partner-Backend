@@ -3,8 +3,8 @@ const express = require('express');
 const router = express.Router();
 const RoomPartner = require('../models/RoomPartner'); // Mongoose model
 
-
-router.post('/create-listing', async (req, res) => {
+ 
+router.post('/create-listing', async (req, res) => { 
   try {
     const { name, location, price, phone, imageUrl, userId, email } = req.body;
 
@@ -18,7 +18,7 @@ router.post('/create-listing', async (req, res) => {
     await newEntry.save();
     res.status(201).json({ message: "Room partner registered", newEntry });
     
-  } catch (error) {
+  } catch (error) { 
     res.status(500).json({ error: "Server Error", details: error });
   }
 });

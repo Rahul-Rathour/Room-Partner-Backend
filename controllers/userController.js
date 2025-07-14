@@ -15,7 +15,7 @@ const RoomPartner = require('../models/RoomPartner');
 
 // @desc Update user profile
 exports.updateListing = async (req, res) => {
-  const { name, location,phone,price, imageUrl } = req.body;
+  const { name, location,phone,price, imageUrl,email } = req.body;
 
   try {
     const profile = await RoomPartner.findOne({ userId: req.params.userId });
@@ -27,6 +27,7 @@ exports.updateListing = async (req, res) => {
     profile.imageUrl = imageUrl || profile.imageUrl;
     profile.phone = phone || profile.phone;
     profile.price = price || profile.price;
+    profile.email = email || profile.email;
 
     // You can also store imageUrl in a separate profileImage field if needed
 
@@ -39,7 +40,7 @@ exports.updateListing = async (req, res) => {
 };
 
 // @desc Get all listings by user
-exports.getUserListings = async (req, res) => {
+exports.getUserListings = async (req, res) => { 
   try {
     const listings = await RoomPartner.find({ userId: req.params.userId });
     res.json(listings);

@@ -13,7 +13,7 @@ const corsOptions = {
 
 // ✅ Apply CORS globally
 app.use(cors(corsOptions));
-// app.use(cors())
+// app.use(cors()) 
 // Middleware
 app.use(express.json());
 // MongoDB connection
@@ -22,6 +22,9 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
 const roomPartnerRoutes = require('./routes/roomPartnerRoutes');
 app.use('/api/partner', roomPartnerRoutes);
 
@@ -31,8 +34,9 @@ app.use('/api', userRoutes);
 const displayListingRoutes = require("./routes/DisplayListingsRoutes");
 app.use('/api/listings', displayListingRoutes);
 
-// Start server
+// Start server 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
 });
+ 

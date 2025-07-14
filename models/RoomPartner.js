@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const roomPartnerSchema = new mongoose.Schema({
   name: String,
-  location: String,  
+  location: String,
   phone: Number,
   price: Number,
-  emial: String,
-  imageUrl: String,  
+  email: { type: String, required: true },
+  imageUrl: String,
   userId: {
-    type: mongoose.Schema.Types.ObjectId, 
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true
   }
