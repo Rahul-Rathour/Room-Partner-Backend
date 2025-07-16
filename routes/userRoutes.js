@@ -33,7 +33,7 @@ router.post("/signup",
                 name: req.body.name,// name: "Rahul",
                 password: sec_password,// password: "123456",
                 email: req.body.email,// email: "abc@gmail.com",
-                
+
             })
             res.json({ success: true })
 
@@ -47,46 +47,45 @@ router.post("/signup",
 // ✅ Login Route
 router.post("/loginuser",
     [
-        body('password', 'invalid password').isLength({ min: 2 }),
+        body('password', 'Invalid password').isLength({ min: 2 }),
         body('email').isEmail()
     ],
     async (req, res) => {
-
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ error: errors.array() });
+            return res.status(400).json({ success: false, message: errors.array()[0].msg });
         }
 
-        // let email = req.body.email;
         try {
             let userData = await user.findOne({ email: req.body.email });
             if (!userData) {
-                return res.status(400).json({ errors: "Try login with correct credentials..." })
+                return res.status(401).json({ success: false, message: "Invalid email or password" });
             }
 
-            const pass_compare = await bcrypt.compare(req.body.password, userData.password); // compare the stored and input password
+            const pass_compare = await bcrypt.compare(req.body.password, userData.password);
             if (!pass_compare) {
-                return res.status(400).json({ errors: "Try login with correct credentials..." })
+                return res.status(401).json({ success: false, message: "Invalid email or password" });
             }
 
-            const data = {          // signature for jwt auth token
+            const data = {
                 user: {
                     id: userData._id
                 }
-            }
+            };
 
-            const authToken = jwt.sign(data, jwtSecret)          // yaha comma deke ek parameter or pass kar sakte hain expiry of token 
-            return res.json({ success: true, authToken: authToken, userId: userData._id })    // kya kya bhejna hai login ke saath server pe 
+            const authToken = jwt.sign(data, jwtSecret);
+            return res.status(200).json({ success: true, authToken: authToken, userId: userData._id });
 
         } catch (error) {
-            console.log("---error", error);
-            res.json({ success: false })
+            console.error("---error", error);
+            return res.status(500).json({ success: false, message: "Internal server error" });
         }
-    })
+    });
 
-const { 
+
+const {
     getUserListings,
-    
+
     updateListing
 } = require('../controllers/userController');
 
@@ -97,5 +96,5 @@ router.get('/my-listing/:userId', getUserListings);  // /api/my-listings/:userId
 router.put('/update-listing/:userId', updateListing); // /api/update-listing/:userId
 
 
- 
+
 module.exports = router;  
