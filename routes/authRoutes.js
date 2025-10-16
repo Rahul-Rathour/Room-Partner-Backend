@@ -21,7 +21,12 @@ router.post('/request-otp', async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) return res.status(404).json({ message: 'Email not found.' });
 
-  const otp = otpGenerator.generate(6, { digits: true });
+  const otp = otpGenerator.generate(6, {
+    digits: true,
+    upperCaseAlphabets: false,
+    lowerCaseAlphabets: false,
+    specialChars: false
+  });
   user.otp = otp;
   user.otpExpires = Date.now() + 10 * 60 * 1000; // 10 min
   await user.save();
@@ -29,7 +34,7 @@ router.post('/request-otp', async (req, res) => {
   await transporter.sendMail({
     from: process.env.MAIL_USER,
     to: email,
-    subject: 'OTP for Password Reset',
+    subject: 'OTP for Room-Partner Password Reset',
     text: `Your OTP is: ${otp}. It expires in 10 minutes.`
   });
 
